@@ -22,18 +22,44 @@ void acceptsession(int s)
 {
 	int c;
 
+	/* IAC DO NAWS    IAC WILL ECHO  IAC DO LINEMODE   IAC SB LINEMODE mask IAC SE */
+	unsigned char bytes[] = { 255, 253, 31,	// IAC DO NAWs
+				  255, 251, 1,	// IAC WILL ECHO
+				  255, 253, 34,	// IAC DO LINEMODE
+				  255, 250, 34, 1, 0, 255, 240, // IAC SB LINEMODE mask=0 IAC SE
+		};
+
 	c = accept(s, NULL, NULL);
 	if(c == -1) {
 		fprintf(stderr, "accept: %s.\n", strerror(errno));
 		return;
 	}
 
+	send(c, bytes, sizeof(bytes), 0);
+
 	makesession(c);
 }
 
-void processinput(int s)
+void recvinput(int s)
 {
-	printf("input from %d\n", s);
+	unsigned char c;
+	size_t n;
+	session *ses;
+
+	ses = getsession(s);
+	if(ses == NULL) {
+		fprintf(stderr, "Unrecognized session %d.\n", s);
+		close(s);
+		return;
+	}
+
+	n = recv(s, &c, 1, 0);
+	if(n == 0) {
+		quitsession(s);
+		return;
+	}
+
+	parse(ses, c);
 }
 
 void serverlisten(int s)
@@ -70,7 +96,7 @@ void serverlisten(int s)
 		for(i = 0; i < sessioncap; i++)
 		if((ses = getsession(i)) != NULL)
 		if(FD_ISSET(i, &rdset))
-			processinput(i);
+			recvinput(i);
 	}
 }
 

@@ -6,9 +6,11 @@ char *getview(session *s)
 	
 }
 
-int setview(int w, int h)
+int setview(session *s, int w, int h)
 {
-
+	s->w = w;
+	s->h = h;
+	printf("%d setview(%d, %d)\n", s->sock, w, h);
 }
 
 int moveup(session *s)

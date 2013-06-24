@@ -4,7 +4,7 @@
 #include "session.h"
 
 char *getview(session *s);
-int setview(int w, int h);
+int setview(session *s, int w, int h);
 
 int moveup(session *s);
 int movedown(session *s);
