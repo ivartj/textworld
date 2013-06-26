@@ -15,3 +15,8 @@ Run with:
     textworld
 
 Which should make a world of text accessible at port 12345.
+
+
+IMPORTANT: This program is written in C and has not gone through
+           thorough security auditing. Bear this in mind while running
+           a server.
