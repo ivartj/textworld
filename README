@@ -4,15 +4,15 @@ textworld
 textworld is a telnet server that provides a virtually infinite,
 collaborative canvas for text.
 
-To install from Github source:
+To build from Github source:
 
     autoreconf --install
-    ./configure --prefix=$PREFIX
-    make all install clean
+    ./configure
+    make all
 
 Run with:
 
-    textworld
+    src/textworld
 
 Which should make a world of text accessible at port 12345.
 
