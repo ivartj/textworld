@@ -3,13 +3,16 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <signal.h>
 #include "session.h"
+
+static int s;
 
 int serverbind(void)
 {
 	int s;
 
-	s = tcplisten("12345");
+	s = tcplisten4("12345");
 	if(s == -1) {
 		fprintf(stderr, "Failed to bind network socket.");
 		exit(EXIT_FAILURE);
@@ -22,11 +25,12 @@ void acceptsession(int s)
 {
 	int c;
 
-	/* IAC DO NAWS    IAC WILL ECHO  IAC DO LINEMODE   IAC SB LINEMODE mask IAC SE */
-	unsigned char bytes[] = { 255, 253, 31,	// IAC DO NAWs
+	unsigned char bytes[] = { 255, 253, 31,	// IAC DO NAWS
 				  255, 251, 1,	// IAC WILL ECHO
 				  255, 253, 34,	// IAC DO LINEMODE
 				  255, 250, 34, 1, 0, 255, 240, // IAC SB LINEMODE mask=0 IAC SE
+				  255, 253, 24, // IAC DO TERM
+				  255, 250, 24, 1, 255, 240, // IAC SB TERM SEND IAC SE
 		};
 
 	c = accept(s, NULL, NULL);
@@ -85,7 +89,8 @@ void serverlisten(int s)
 			nfds = sessioncap;
 
 		if((n = select(nfds, &rdset, &wrset, &erset, NULL)) == -1) {
-			perror("select");
+			if(errno != EINTR)
+				perror("select");
 			break;
 		}
 
@@ -100,11 +105,27 @@ void serverlisten(int s)
 	}
 }
 
+void sighandle(int sig)
+{
+	int i;
+	session *ses;
+
+	for(i = 0; i < sessioncap; i++)
+	if((ses = getsession(i)) != NULL)
+		close(ses->sock);
+	fprintf(stderr, "Closing server socket.\n");
+	close(s);
+}
+
 int main(int argc, char *argv[])
 {
-	int s;
+	static struct sigaction sa = { sighandle, 0, 0 };
+	int err;
 
 	s = serverbind();
+	sigaction(SIGTERM, &sa, NULL);
+	sigaction(SIGINT, &sa, NULL);
+	sigaction(SIGHUP, &sa, NULL);
 	serverlisten(s);
 
 	close(s);

@@ -1,1 +1,1 @@
-SUBDIRS = net textd
+SUBDIRS = net src

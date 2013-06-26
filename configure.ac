@@ -1,4 +1,4 @@
-AC_INIT([textd], [0.01], [it.jarlsby@stud.uis.no])
+AC_INIT([textworld], [0.01], [it.jarlsby@stud.uis.no])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 
 AC_PROG_CC
@@ -16,7 +16,7 @@ AM_CONDITIONAL([WIN32], [test x$windows = xyes])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([
 	Makefile
-	textd/Makefile
+	src/Makefile
 	net/Makefile
 	])
 AC_OUTPUT

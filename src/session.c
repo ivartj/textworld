@@ -55,3 +55,20 @@ session *makesession(int sock)
 
 	return s;
 }
+
+int inview(session *s, int x, int y)
+{
+	int ix, iy, fx, fy;
+
+	ix = s->x - s->w / 2;
+	iy = s->y - s->h / 2;
+	fx = ix + s->w;
+	fy = iy + s->h;
+
+	if(x < ix || y < iy)
+		return 0;
+	if(x > fx || y > fy)
+		return 0;
+
+	return 1;
+}

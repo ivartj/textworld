@@ -5,6 +5,8 @@ typedef struct inputstate inputstate;
 
 struct inputstate {
 	int state;
+	int ansistate;
+	char ansiopt;
 	int sb;
 	unsigned char sbpar[256];
 	int sbparn;
