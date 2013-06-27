@@ -90,8 +90,7 @@ void serverlisten(int s)
 			nfds = sessioncap;
 
 		if((n = select(nfds, &rdset, &wrset, &erset, NULL)) == -1) {
-			if(errno != EINTR)
-				perror("select");
+			perror("select");
 			break;
 		}
 
@@ -112,5 +111,5 @@ int main(int argc, char *argv[])
 	serverlisten(s);
 
 	close(s);
-	exit(EXIT_SUCCESS);
+	exit(EXIT_FAILURE);
 }
