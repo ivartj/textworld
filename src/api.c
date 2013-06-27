@@ -12,8 +12,8 @@ int setview(session *s, int w, int h)
 {
 	s->w = w;
 	s->h = h;
-	refresh(s);
 	printf("%d setview(%d, %d)\n", s->sock, w, h);
+	refresh(s);
 }
 
 int setterm(session *s, char *termtype)

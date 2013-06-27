@@ -1,12 +1,12 @@
 #include "parse.h"
 #include <stdint.h>
-#include <arpa/inet.h>
 #include "string.h"
 #include "api.h"
 #include "print.h"
 
 static void parsetelnet(session *s, unsigned char c);
 static void parseansi(session *s, unsigned char c);
+static uint16_t int_ntohs(uint16_t num);
 
 #define IAC	255
 
@@ -195,8 +195,8 @@ void parsetelnet(session *s, unsigned char c)
 		switch(s->is.sb) {
 		case NAWS:
 			if(s->is.sbparn == 4) {
-				w = ntohs(*(uint16_t *)s->is.sbpar);
-				h = ntohs(*(uint16_t *)(s->is.sbpar + 2));
+				w = int_ntohs(*(uint16_t *)s->is.sbpar);
+				h = int_ntohs(*(uint16_t *)(s->is.sbpar + 2));
 				setview(s, w, h);
 				s->is.sb = 0;
 			}
@@ -215,4 +215,18 @@ void parsetelnet(session *s, unsigned char c)
 		s->is.state = 0;
 		break;
 	}
+}
+
+uint16_t int_ntohs(uint16_t num)
+{
+	uint16_t val;
+	int i;
+	unsigned char *b;
+
+	b = (unsigned char *)&val;
+
+	for(i = 0; i < sizeof(num); i++)
+		b[sizeof(num) - i - 1] = (num >> 8 * i) & 0xFF;
+
+	return val;
 }
