@@ -74,6 +74,6 @@ int back(session *s)
 	s->x--;
 	if(s->x < s->lx)
 		s->lx = s->x;
-	add(' ', s->x, s->y);
+	adds(s, ' ', s->x, s->y);
 	refresh(s);
 }
