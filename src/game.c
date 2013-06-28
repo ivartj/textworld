@@ -179,11 +179,8 @@ void adds(session *e, char c, int x, int y)
 
 }
 
-int count;
-
 char getchild(binar *t, int x, int y)
 {
-	count++;
 	if(t == NULL)
 		return ' ';
 
@@ -199,15 +196,9 @@ char getchild(binar *t, int x, int y)
 
 char get(int x, int y)
 {
-	char c;
-
-	count = 0;
 	if(t == NULL)
 		return ' ';
-	c = getchild(t, x, y);
-
-	printf("count = %d\n", count);
-	return c;
+	return getchild(t, x, y);
 }
 
 char *getregion(int x, int y, int w, int h)

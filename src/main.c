@@ -1,9 +1,10 @@
-#include <sys/select.h>
+#include "../net/net.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-#include <signal.h>
+
 #include "session.h"
 
 static int s;
@@ -104,29 +105,11 @@ void serverlisten(int s)
 	}
 }
 
-void sighandle(int sig)
-{
-	int i;
-	session *ses;
-
-	for(i = 0; i < sessioncap; i++)
-	if((ses = getsession(i)) != NULL)
-		close(ses->sock);
-	fprintf(stderr, "Closing server socket.\n");
-	close(s);
-}
-
 int main(int argc, char *argv[])
 {
-	static struct sigaction sa = { sighandle, 0, 0 };
-	int err;
-
 	s = serverbind();
-	sigaction(SIGTERM, &sa, NULL);
-	sigaction(SIGINT, &sa, NULL);
-	sigaction(SIGHUP, &sa, NULL);
 	serverlisten(s);
 
 	close(s);
-	exit(EXIT_SUCCESS);
+	exit(EXIT_FAILURE);
 }
