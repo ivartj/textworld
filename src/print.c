@@ -59,13 +59,13 @@ size_t printline(char *out, char *map, int w, int r)
 		sp = 0;
 		for(cc = c + 1; cc < w; cc++) {
 			if(map[r * w + cc] == ' ') {
-				sp++;
 				if(sp == 5)
 					break;
+				sp++;
 			} else
 				sp = 0;
 		}
-		cc -= sp - 1; // not sure why
+		cc -= sp; // not sure why
 		inc += sprintf(out + inc, "\x1b[%d;%dH", r + 1, c + 1);
 		memcpy(out + inc, map + r * w + c, cc - c);
 		inc += cc - c;

@@ -9,13 +9,16 @@ typedef struct quad quad;
 struct quad {
 	char c;
 	int x, y;
-	quad *ne, *se, *sw, *nw;
+	quad *ne, *nw, *sw, *se;
 };
 
 static void resizebuf(int w, int h);
 
 static char *buf = NULL;
 static size_t bufcap = 0;
+
+quad *t = NULL;
+
 
 void resizebuf(int w, int h)
 {
@@ -27,8 +30,6 @@ void resizebuf(int w, int h)
 		buf = realloc(buf, bufcap);
 	}
 }
-
-quad *t = NULL;
 
 quad *makequad(char c, int x, int y)
 {

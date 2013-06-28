@@ -89,8 +89,7 @@ void serverlisten(int s)
 			nfds = sessioncap;
 
 		if((n = select(nfds, &rdset, &wrset, &erset, NULL)) == -1) {
-			if(errno != EINTR)
-				perror("select");
+			perror("select");
 			break;
 		}
 

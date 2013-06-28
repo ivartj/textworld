@@ -28,8 +28,6 @@ int quitsession(int sock)
 	free(s);
 }
 
-// TODO set view dimension
-// TODO set position
 session *makesession(int sock)
 {
 	session *s;
