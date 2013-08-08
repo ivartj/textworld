@@ -4,16 +4,68 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <getopt.h>
 
 #include "session.h"
 
 static int s;
+char *port = "12345";
+
+void usage(FILE *out)
+{
+	fprintf(out, "usage: textworld [ -p <port-number> ]\n");
+}
+
+int isvalidport(char *port)
+{
+	long num;
+
+	num = strtol(port, NULL, 10);
+	if(num < 1 || num > 65535)
+		return 0;
+	return 1;
+}
+
+void parseargs(int argc, char *argv[])
+{
+	int c;
+	static struct option longopts[] = {
+		{ "help", no_argument, NULL, 'h' },
+		{ "port", required_argument, NULL, 'p' },
+		{ 0, 0, 0, 0 },
+	};
+
+	while((c = getopt_long(argc, argv, "h", longopts, NULL)) != -1)
+	switch(c) {
+	case 'p':
+		port = optarg;
+		if(!isvalidport(port)) {
+			fprintf(stderr, "'%s' is not a valid port number (1-65535).\n", port);
+			exit(EXIT_FAILURE);
+		}
+		break;
+	case 'h':
+		usage(stdout);
+		exit(EXIT_SUCCESS);
+	case '?':
+		usage(stderr);
+		exit(EXIT_FAILURE);
+	}
+
+	switch(argc - optind) {
+	case 0:
+		break;
+	default:
+		usage(stderr);
+		exit(EXIT_FAILURE);
+	}
+}
 
 int serverbind(void)
 {
 	int s;
 
-	s = tcplisten4("12345");
+	s = tcplisten4(port);
 	if(s == -1) {
 		fprintf(stderr, "Failed to bind network socket.");
 		exit(EXIT_FAILURE);
@@ -107,6 +159,7 @@ void serverlisten(int s)
 
 int main(int argc, char *argv[])
 {
+	parseargs(argc, argv);
 	s = serverbind();
 	serverlisten(s);
 
