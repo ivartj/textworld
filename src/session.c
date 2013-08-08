@@ -48,7 +48,6 @@ session *makesession(int sock)
 		array = realloc(array, sizeof(session *) * sessioncap);
 		memset(array + off, 0, (sessioncap - off) * (sizeof(session *)));
 	}
-	printf("%d\n", sock);
 	array[sock] = s;
 
 	return s;

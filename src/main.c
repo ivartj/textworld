@@ -35,7 +35,7 @@ void parseargs(int argc, char *argv[])
 		{ 0, 0, 0, 0 },
 	};
 
-	while((c = getopt_long(argc, argv, "h", longopts, NULL)) != -1)
+	while((c = getopt_long(argc, argv, "hp:", longopts, NULL)) != -1)
 	switch(c) {
 	case 'p':
 		port = optarg;

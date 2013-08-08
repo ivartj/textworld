@@ -83,8 +83,6 @@ void refresh(session *s)
 	char *out;
 	size_t inc;
 
-	printf("%d refresh\n", s->sock);
-
 	s->os.notfirst = 1;
 
 	map = getview(s);
@@ -99,7 +97,6 @@ void refresh(session *s)
 	if(s->x >= 0 && s->y >= 0 && s->x < s->w && s->y < s->h);
 		out += sprintf(out, "\x1b[%d;%dH", s->h / 2 + 1, s->w / 2 + 1);
 
-	printf("refresh size = %ld\n", out - buf);
 	send(s->sock, buf, out - buf, 0);
 }
 

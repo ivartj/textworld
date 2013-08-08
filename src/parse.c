@@ -54,7 +54,6 @@ void parseascii(session *s, unsigned char c)
 
 void parseansi(session *s, unsigned char c)
 {
-	printf("%d %hhu\n", s->sock, c);
 	switch(s->is.ansistate) {
 	case 0:
 		switch(c) {
@@ -131,7 +130,6 @@ void parsetelnet(session *s, unsigned char c)
 		}
 		break;
 	case IAC:
-		printf("%d IAC %hhu\n", s->sock, c);
 		switch(c) {
 		case WILL:
 			s->is.state = WILL;
@@ -204,11 +202,9 @@ void parsetelnet(session *s, unsigned char c)
 		}
 		break;
 	case WONT:
-		printf("%d WONT %hhu\n", s->sock, c);
 		s->is.state = 0;
 		break;
 	case WILL:
-		printf("%d WILL %hhu\n", s->sock, c);
 		s->is.state = 0;
 		break;
 	default:
