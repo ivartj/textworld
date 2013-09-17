@@ -25,6 +25,7 @@ int tcplistenfamily(const char *port, int ai_family)
 {
 	int err;
 	int s;
+	int true = 1;
 	struct addrinfo hints;
 	struct addrinfo *res = NULL;
 	struct addrinfo *iter = NULL;
@@ -51,6 +52,9 @@ int tcplistenfamily(const char *port, int ai_family)
 		s = socket(iter->ai_family, iter->ai_socktype, iter->ai_protocol);
 		if(s == -1)
 			continue;
+
+		setsockopt(s, SOL_SOCKET, SO_REUSEADDR, &true, sizeof(true));
+		
 		err = bind(s, iter->ai_addr, iter->ai_addrlen);
 		if(err) {
 			close(s);

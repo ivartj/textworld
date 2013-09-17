@@ -67,7 +67,7 @@ int serverbind(void)
 
 	s = tcplisten4(port);
 	if(s == -1) {
-		fprintf(stderr, "Failed to bind network socket.");
+		fprintf(stderr, "Failed to bind network socket: %s.\n", strerror(errno));
 		exit(EXIT_FAILURE);
 	}
 
