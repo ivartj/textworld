@@ -1,4 +1,6 @@
 #include "../net/net.h"
+#include "args.h"
+#include "../config.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,9 +13,19 @@
 static int s;
 char *port = "12345";
 
-void usage(FILE *out)
+void usage(FILE *out, args_option *opts)
 {
-	fprintf(out, "usage: textworld [ -p <port-number> ]\n");
+	fprintf(out, ""\
+		"Usage:\n"\
+		"  textworld [ -p PORT_NUMBER ]\n"\
+		"\n"\
+		"Description:\n"\
+		"  Telnet server which presents a virtually infinite, collaborative canvas\n"\
+		"  of text.\n"\
+		"\n"\
+		"Options:\n");
+	args_usage(opts, out);
+	fputc('\n', out);
 }
 
 int isvalidport(char *port)
@@ -28,14 +40,17 @@ int isvalidport(char *port)
 
 void parseargs(int argc, char *argv[])
 {
-	int c;
-	static struct option longopts[] = {
-		{ "help", no_argument, NULL, 'h' },
-		{ "port", required_argument, NULL, 'p' },
-		{ 0, 0, 0, 0 },
+	args_parse_state st = { 0 };
+	static args_option opts[] = {
+		{ 'h', 'h', "help", NULL, "Prints help message" },
+		{ 301, '-', "version", NULL, "Prints version" },
+		{ 'p', 'p', "port", "PORT_NUMBER", "Specifies port number to listen to" },
+		{ 0 },
 	};
+	int c;
+	const char *cmd = args_get_cmd(argv[0]);
 
-	while((c = getopt_long(argc, argv, "hp:", longopts, NULL)) != -1)
+	while((c = args_parse(&st, argc, argv, opts)) != -1)
 	switch(c) {
 	case 'p':
 		port = optarg;
@@ -44,11 +59,14 @@ void parseargs(int argc, char *argv[])
 			exit(EXIT_FAILURE);
 		}
 		break;
+	case 301: // version
+		printf("%s version %s\n", cmd, PACKAGE_VERSION);
+		exit(EXIT_SUCCESS);
 	case 'h':
-		usage(stdout);
+		usage(stdout, opts);
 		exit(EXIT_SUCCESS);
 	case '?':
-		usage(stderr);
+		usage(stderr, opts);
 		exit(EXIT_FAILURE);
 	}
 
@@ -56,7 +74,7 @@ void parseargs(int argc, char *argv[])
 	case 0:
 		break;
 	default:
-		usage(stderr);
+		usage(stderr, opts);
 		exit(EXIT_FAILURE);
 	}
 }
