@@ -21,7 +21,7 @@ void usage(FILE *out, args_option *opts)
 		"\n"\
 		"Description:\n"\
 		"  Telnet server which presents a virtually infinite, collaborative canvas\n"\
-		"  of text.\n"\
+		"  of text. The default port is 12345.\n"\
 		"\n"\
 		"Options:\n");
 	args_usage(opts, out);
@@ -42,9 +42,9 @@ void parseargs(int argc, char *argv[])
 {
 	args_parse_state st = { 0 };
 	static args_option opts[] = {
-		{ 'h', 'h', "help", NULL, "Prints help message" },
-		{ 301, '-', "version", NULL, "Prints version" },
-		{ 'p', 'p', "port", "PORT_NUMBER", "Specifies port number to listen to" },
+		{ 'h', 'h', "help", NULL, "Prints help message." },
+		{ 301, '-', "version", NULL, "Prints version." },
+		{ 'p', 'p', "port", "PORT_NUMBER", "Specifies port number to listen to. By default port 12345." },
 		{ 0 },
 	};
 	int c;

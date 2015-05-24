@@ -20,3 +20,17 @@ Which should make a world of text accessible at port 12345.
 IMPORTANT: This program is written in C and has not gone through
            thorough security auditing. Bear this in mind while running
            a server.
+
+    $ textworld --help
+    Usage:
+      textworld [ -p PORT_NUMBER ]
+
+    Description:
+      Telnet server which presents a virtually infinite, collaborative canvas
+      of text. The default port is 12345.
+
+    Options:
+      -h, --help              Prints help message.
+      --version               Prints version.
+      -p, --port=PORT_NUMBER  Specifies port number to listen to. By default port 12345.
+
