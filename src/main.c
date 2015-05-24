@@ -123,13 +123,11 @@ void serverlisten(int s)
 {
 	int i, n;
 	int nfds;
-	fd_set rdset, wrset, erset;
+	fd_set rdset;
 	session *ses;
 
 	for(;;) {
 		FD_ZERO(&rdset);
-		FD_ZERO(&wrset);
-		FD_ZERO(&erset);
 
 		nfds = s + 1;
 		FD_SET(s, &rdset);
@@ -141,7 +139,7 @@ void serverlisten(int s)
 		if(nfds < sessioncap)
 			nfds = sessioncap;
 
-		if((n = select(nfds, &rdset, &wrset, &erset, NULL)) == -1) {
+		if((n = select(nfds, &rdset, NULL, NULL, NULL)) == -1) {
 			perror("select");
 			break;
 		}
